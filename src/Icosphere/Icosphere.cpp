@@ -1,26 +1,26 @@
 #include "Icosphere.hpp"
 
 Icosphere::Icosphere() {
-    resolution = 5;
-    position = Vector3{0.f, 0.f, 0.f};
-    radius = 1.f;
-    colour = ORANGE;
+    resolution = 1;
+    GenerateModel();
+}
 
+void Icosphere::GenerateModel() {
     // Create the icosphere, very nicely sourced from http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
     const float t = (1.0f + sqrt(5.0f)) / 2.0f; // Golden ratio
     vertices = {
-        Vector3Normalize(Vector3{-1,  t,  0}),
-        Vector3Normalize(Vector3{ 1,  t,  0}),
-        Vector3Normalize(Vector3{-1, -t,  0}),
-        Vector3Normalize(Vector3{ 1, -t,  0}),
-        Vector3Normalize(Vector3{ 0, -1,  t}),
-        Vector3Normalize(Vector3{ 0,  1,  t}),
-        Vector3Normalize(Vector3{ 0, -1, -t}),
-        Vector3Normalize(Vector3{ 0,  1, -t}),
-        Vector3Normalize(Vector3{ t,  0, -1}),
-        Vector3Normalize(Vector3{ t,  0,  1}),
-        Vector3Normalize(Vector3{-t,  0, -1}),
-        Vector3Normalize(Vector3{-t,  0,  1})
+        vec3{-1,  t,  0}.normalised(),
+        vec3{ 1,  t,  0}.normalised(),
+        vec3{-1, -t,  0}.normalised(),
+        vec3{ 1, -t,  0}.normalised(),
+        vec3{ 0, -1,  t}.normalised(),
+        vec3{ 0,  1,  t}.normalised(),
+        vec3{ 0, -1, -t}.normalised(),
+        vec3{ 0,  1, -t}.normalised(),
+        vec3{ t,  0, -1}.normalised(),
+        vec3{ t,  0,  1}.normalised(),
+        vec3{-t,  0, -1}.normalised(),
+        vec3{-t,  0,  1}.normalised()
     };
 
     triangles = {
@@ -48,7 +48,7 @@ Icosphere::Icosphere() {
 
     int i1, i2, i3, i12, i13, i23;
     for (int i = 0; i < resolution; i++) {
-        std::vector<TriIndex> newTriangles;
+        vector<TriIndex> newTriangles;
         for (const auto& tri : triangles) {
             i1 = tri.index0;
             i2 = tri.index1;
@@ -66,12 +66,11 @@ Icosphere::Icosphere() {
     }
 
     for (const auto& tri : triangles) {
-        Vector3 v1 = vertices[tri.index0];
-        Vector3 v2 = vertices[tri.index1];
-        Vector3 v3 = vertices[tri.index2];
+        vec3 v1 = vertices[tri.index0];
+        vec3 v2 = vertices[tri.index1];
+        vec3 v3 = vertices[tri.index2];
 
-        Vector3 normal = Vector3CrossProduct(v2 - v1, v3 - v1);
-        normal = Vector3Normalize(normal);
+        vec3 normal = (v2 - v1).cross(v3 - v1).normalised();
 
         normals.push_back(normal);
         normals.push_back(normal);
@@ -110,18 +109,13 @@ Icosphere::Icosphere() {
     UploadMesh(&mesh, false);
 
     model = LoadModelFromMesh(mesh);
-
-    // Free manually allocated memory
-    // MemFree(mesh.vertices);
-    // MemFree(mesh.normals);
 }
 
 int Icosphere::CreateNewMidpoint(int i1, int i2) {
     // Not found, so calculate middle point
-    Vector3 v1 = vertices[i1];
-    Vector3 v2 = vertices[i2];
-    Vector3 midpoint = (v1 + v2) / 2.0f;
-    midpoint = Vector3Normalize(midpoint);
+    vec3 v1 = vertices[i1];
+    vec3 v2 = vertices[i2];
+    vec3 midpoint = ((v1 + v2) / 2.0f).normalised();
     // Get index before adding new vertex
     // E.g. if we add the 13th vertex (the first new one), we want to return 12
     int index = vertices.size();
@@ -129,22 +123,32 @@ int Icosphere::CreateNewMidpoint(int i1, int i2) {
     return index;
 }
 
-void Icosphere::Draw() {
-    for (const auto& tri : triangles) {
-        Vector3 v1 = vertices[tri.index0];
-        Vector3 v2 = vertices[tri.index1];
-        Vector3 v3 = vertices[tri.index2];
+void Icosphere::SetResolution(int resolution) {
+    resolution = max(1, resolution);
+    this->resolution = resolution;
+    GenerateModel();
+}
 
-        Vector3 pointSource = {1, 1, 1};
-        Vector3 avgV = (v1 + v2 + v3) / 3.0f;
-        float distanceFromSource = std::max(std::max(Vector3Distance(pointSource, avgV), 0.1f), 1.0f);
+void Icosphere::Draw(vec3 position, float radius, Color colour) {
+    for (const auto& tri : triangles) {
+        vec3 v1 = position + vertices[tri.index0]*radius;
+        vec3 v2 = position + vertices[tri.index1]*radius;
+        vec3 v3 = position + vertices[tri.index2]*radius;
+
+        vec3 pointSource = {1, 1, 1};
+        vec3 avgV = (v1 + v2 + v3) / 3.0f;
+        // float distanceFromSource = max(max((pointSource - avgV).magnitude(), 0.1f), 1.0f);
+        float distanceFromSource = 1.0f;
 
         Color modifedColour = colour;
         modifedColour.r = colour.r/(distanceFromSource*distanceFromSource);
         modifedColour.g = colour.g/(distanceFromSource*distanceFromSource);
         modifedColour.b = colour.b/(distanceFromSource*distanceFromSource);
 
-        DrawTriangle3D(v1, v2, v3, modifedColour);
+        Vector3 raylibV1 = {v1.x, v1.y, v1.z};
+        Vector3 raylibV2 = {v2.x, v2.y, v2.z};
+        Vector3 raylibV3 = {v3.x, v3.y, v3.z};
+        DrawTriangle3D(raylibV1, raylibV2, raylibV3, modifedColour);
     }
 
 

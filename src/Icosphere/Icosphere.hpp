@@ -5,6 +5,9 @@
 #include <math.h>
 #include <raylib.h>
 #include <raymath.h>
+#include <Math.hpp>
+
+using namespace std;
 
 /*  A mesh of triangles representing a spherical surface.
     The methods here are adapted from http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html.
@@ -13,14 +16,12 @@ class Icosphere {
     public:
         Icosphere();
         ~Icosphere() {};
-        void Draw();
+        void Draw(vec3 position, float radius, Color colour);
+        void SetResolution(int resolution);
     private:
-        Vector3 position;
-        float radius;
         int resolution;
-        Color colour;
-        std::vector<Vector3> vertices;
-        std::vector<Vector3> normals;
+        vector<vec3> vertices;
+        vector<vec3> normals;
         Model model;
 
         struct TriIndex {
@@ -34,7 +35,8 @@ class Icosphere {
                 this->index2 = index2;
             }
         };
-        std::vector<TriIndex> triangles;
+        vector<TriIndex> triangles;
         
+        void GenerateModel();
         int CreateNewMidpoint(int index1, int index2);
 };
