@@ -34,5 +34,7 @@ class Icosphere {
                 this->index2 = index2;
             }
         };
+        std::vector<TriIndex> triangles;
+        
         int CreateNewMidpoint(int index1, int index2);
 };

@@ -1,10 +1,10 @@
 #include "Icosphere.hpp"
 
 Icosphere::Icosphere() {
-    resolution = 3;
+    resolution = 5;
     position = Vector3{0.f, 0.f, 0.f};
     radius = 1.f;
-    colour = RED;
+    colour = ORANGE;
 
     // Create the icosphere, very nicely sourced from http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
     const float t = (1.0f + sqrt(5.0f)) / 2.0f; // Golden ratio
@@ -23,7 +23,7 @@ Icosphere::Icosphere() {
         Vector3Normalize(Vector3{-t,  0,  1})
     };
 
-    std::vector<TriIndex> triangles = {
+    triangles = {
         {0, 11, 5},
         {0,  5, 1},
         {0,  1, 7},
@@ -130,5 +130,24 @@ int Icosphere::CreateNewMidpoint(int i1, int i2) {
 }
 
 void Icosphere::Draw() {
-    DrawModel(model, position, radius, colour);
+    for (const auto& tri : triangles) {
+        Vector3 v1 = vertices[tri.index0];
+        Vector3 v2 = vertices[tri.index1];
+        Vector3 v3 = vertices[tri.index2];
+
+        Vector3 pointSource = {1, 1, 1};
+        Vector3 avgV = (v1 + v2 + v3) / 3.0f;
+        float distanceFromSource = std::max(std::max(Vector3Distance(pointSource, avgV), 0.1f), 1.0f);
+
+        Color modifedColour = colour;
+        modifedColour.r = colour.r/(distanceFromSource*distanceFromSource);
+        modifedColour.g = colour.g/(distanceFromSource*distanceFromSource);
+        modifedColour.b = colour.b/(distanceFromSource*distanceFromSource);
+
+        DrawTriangle3D(v1, v2, v3, modifedColour);
+    }
+
+
+    // DrawModel(model, position, radius, colour);
+    // DrawModelWires(model, position, radius, BLACK);
 }
