@@ -2,12 +2,10 @@
 #include <Star.hpp>
 #include <Operators/OrbitalMechanics/OrbitalMechanics.hpp>
 
-constexpr auto SCREEN_WIDTH  = 1920;
-constexpr auto SCREEN_HEIGHT = 1080;
-
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Solar System");
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    InitWindow(GetScreenWidth(), GetScreenHeight(), "Solar System");
     SetTargetFPS(60);
     // ToggleFullscreen();
 
