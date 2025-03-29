@@ -29,12 +29,16 @@ int main() {
     orbitalMechanics.AddBody(star3);
     orbitalMechanics.AddBody(star4);
 
-    orbitalMechanics.CalcFutureStates(8000);
+
+    bool isPaused = true;
     
     while (!WindowShouldClose()) {
         UpdateCamera(&camera, CAMERA_FREE);
 
+        if (IsKeyPressed(KEY_P)) isPaused = !isPaused;
+        if (!isPaused) {
         if (GetFrameTime() != 0.f) orbitalMechanics.Update(GetFrameTime());
+        }
 
         BeginDrawing();
 
