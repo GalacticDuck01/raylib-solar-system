@@ -19,4 +19,5 @@ public:
         acceleration.y = f.y/mass;
         acceleration.z = f.z/mass;
     }
+    vec3 RungeKutta4(vec3 state, float h);
 };
