@@ -7,6 +7,8 @@ PhysicsBody::PhysicsBody(vec3 position, vec3 velocity, vec3 acceleration, float 
     this->velocity = velocity;
     this->acceleration = acceleration;
     this->mass = mass;
+
+    futurePositions.push_back({0.f, position});
 }
 
 void PhysicsBody::Update(float dt) {
