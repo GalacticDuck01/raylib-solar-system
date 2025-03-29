@@ -26,11 +26,11 @@ void OrbitalMechanics::ApplyForces() {
             if (io == ib) continue;
 
             PhysicsBody& other = *bodies[io];
-            vec3 r = body.position - other.position;
+            vec3 r = other.position - body.position;
 
             vec3 F = r.normalised()*(G*body.mass*other.mass/r.magnitudeSquared());
-            body.ApplyInstantaneousForce(F*-1.f);
-            other.ApplyInstantaneousForce(F);
+            body.ApplyInstantaneousForce(F);
+            other.ApplyInstantaneousForce(F*-1.f);
         }
     }
 
