@@ -20,29 +20,59 @@ int main() {
     orbitalMechanics.AddBody(star1);
     orbitalMechanics.AddBody(star2);
 
-    orbitalMechanics.CalcFutureStates(2000);
+    orbitalMechanics.CalcFutureStates(8000);
 
+    float deltaTime = 0.f;
     while (!WindowShouldClose()) {
         UpdateCamera(&camera, CAMERA_FREE);
 
+        deltaTime += GetFrameTime();
+        int timeStepsPerFrame = 0;
+        float dt = orbitalMechanics.bodies[0]->futurePositions.front().first;
+        while (deltaTime >= dt) {
+            for (auto& body : orbitalMechanics.bodies) {
+                body->futurePositions.pop_front();
+            }
+
+            deltaTime -= dt;
+            timeStepsPerFrame++;
         orbitalMechanics.Update();
-        star1.Update(1.0f/60.0f);
-        star2.Update(1.0f/60.0f);
+            dt = orbitalMechanics.bodies[0]->futurePositions.front().first;
+        }
 
         BeginDrawing();
 
         ClearBackground(BLACK);
         BeginMode3D(camera);
 
-        DrawGrid(100, 1.0f);
+
+        // Draw lines connecting each upcoming position of each star
+        int nStar1Positions = star1.futurePositions.size();
+        for (unsigned int is = 0; is < nStar1Positions - 1; is++) {
+            Vector3 pos = {star1.futurePositions[is].second.x, star1.futurePositions[is].second.y, star1.futurePositions[is].second.z};
+            Vector3 nextPos = {star1.futurePositions[is+1].second.x, star1.futurePositions[is+1].second.y, star1.futurePositions[is+1].second.z};
+            float alpha = 1.0f - exp(-(float)is/(0.1f*(float)nStar1Positions));
+            DrawLine3D(pos, nextPos, Fade(MAROON, alpha));
+        }
+
+        int nStar2Positions = star2.futurePositions.size();
+        for (unsigned int is = 0; is < nStar2Positions - 1; is++) {
+            Vector3 pos = {star2.futurePositions[is].second.x, star2.futurePositions[is].second.y, star2.futurePositions[is].second.z};
+            Vector3 nextPos = {star2.futurePositions[is+1].second.x, star2.futurePositions[is+1].second.y, star2.futurePositions[is+1].second.z};
+            float alpha = 1.0f - exp(-(float)is/(0.1f*(float)nStar2Positions));
+            DrawLine3D(pos, nextPos, Fade(DARKBLUE, alpha));
+        }
+
         star1.Draw(star1.position, 1.0f, star1.colour);
         star2.Draw(star2.position, 1.0f, star2.colour);
 
         EndMode3D();
 
-        EndDrawing();
+        DrawFPS(10, 100);
+        DrawText(TextFormat("deltaTime: %.8f", deltaTime), 10, 30, 20, WHITE);
+        DrawText(TextFormat("Steps per frame: %d", timeStepsPerFrame), 400, 30, 20, WHITE);
 
-        
+        EndDrawing();
     }
 
     CloseWindow();
