@@ -4,7 +4,7 @@
 #include <math.h>
 
 void OrbitalMechanics::Update() {
-    for (int ib = 0; ib < bodies.size(); ib++) {
+    for (unsigned int ib = 0; ib < bodies.size(); ib++) {
         PhysicsBody& body = *bodies[ib];
         for (int io = 0; io < bodies.size(); io++) {
             if (io == ib) continue;
@@ -18,9 +18,17 @@ void OrbitalMechanics::Update() {
             body.ApplyInstantaneousForce(F*-1.f);
             other.ApplyInstantaneousForce(F);
         }
+
+        body.Update(dt);
     }
 }
 
 void OrbitalMechanics::AddBody(PhysicsBody& body) {
     bodies.push_back(&body);
+}
+
+void OrbitalMechanics::CalcFutureStates(int steps) {
+    for (unsigned int is = 0; is < steps; is++) {
+        Update();
+    }
 }

@@ -20,6 +20,8 @@ int main() {
     orbitalMechanics.AddBody(star1);
     orbitalMechanics.AddBody(star2);
 
+    orbitalMechanics.CalcFutureStates(2000);
+
     while (!WindowShouldClose()) {
         UpdateCamera(&camera, CAMERA_FREE);
 

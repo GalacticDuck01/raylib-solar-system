@@ -14,6 +14,10 @@ void PhysicsBody::Update(float dt) {
     position += RungeKutta4(velocity, dt);
     velocity += RungeKutta4(acceleration, dt);
 
+    futurePositions.push_back({dt, position});
+
+    if (futurePositions.size() > 8000) futurePositions.pop_front();
+
     acceleration = {0.f, 0.f, 0.f};
 }
 

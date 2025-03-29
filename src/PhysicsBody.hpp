@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <Math.hpp>
 #include <iostream>
+#include <deque>
 
 class PhysicsBody {
 public:
@@ -10,6 +11,7 @@ public:
     vec3 velocity = {0.f, 0.f, 0.f};
     vec3 acceleration = {0.f, 0.f, 0.f};
     float mass = 1.f;
+    deque<pair<float, vec3>> futurePositions = {};
 
     PhysicsBody();
     PhysicsBody(vec3 position, vec3 velocity, vec3 acceleration, float mass);
