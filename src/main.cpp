@@ -13,14 +13,8 @@ int main() {
 
     Camera camera = { { 5.0f, 5.0f, 5.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, 45.0f, 0 };
 
-    Star star1 = Star(RED, 5);
-    star1.position = { 0.f, 0.f, 0.f };
-    star1.velocity = { 0.f, 0.f, -2.f };
-    star1.mass = 10.f;
-    Star star2 = Star(BLUE, 5);
-    star2.position = { 10.f, 0.f, 0.f };
-    star2.velocity = { 0.f, 0.f, 2.f };
-    star2.mass = 10.f;
+    Star star1 = Star(10.f, 1,  {0.f, 0.f, 0.f}, {0.f, 0.f, -2.f}, RED,  3);
+    Star star2 = Star(10.f, 1, {10.f, 0.f, 0.f}, {0.f, 0.f,  2.f}, BLUE, 3);
     
     OrbitalMechanics orbitalMechanics = OrbitalMechanics();
     orbitalMechanics.AddBody(star1);
