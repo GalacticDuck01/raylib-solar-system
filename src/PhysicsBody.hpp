@@ -4,6 +4,7 @@
 #include <Math.hpp>
 #include <iostream>
 #include <deque>
+#include <functional>
 
 class PhysicsBody {
 public:
@@ -22,5 +23,5 @@ public:
         acceleration.y += f.y/mass;
         acceleration.z += f.z/mass;
     }
-    vec3 RungeKutta4(vec3 state, float h);
+    vec3 RungeKutta4(function<vec3(vec3, float)> dydt, vec3 y0, float h);
 };

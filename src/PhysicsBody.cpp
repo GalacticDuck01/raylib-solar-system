@@ -13,8 +13,11 @@ PhysicsBody::PhysicsBody(vec3 position, vec3 velocity, vec3 acceleration, float 
 
 void PhysicsBody::Update(float dt) {
 
-    position += RungeKutta4(velocity, dt);
-    velocity += RungeKutta4(acceleration, dt);
+    auto dvdt = [&](vec3 r, float t) { return acceleration; };
+    auto drdt = [&](vec3 r, float t) { return velocity; };
+
+    position += RungeKutta4(drdt, position, dt);
+    velocity += RungeKutta4(dvdt, velocity, dt);
 
     futurePositions.push_back({dt, position});
 
@@ -23,13 +26,16 @@ void PhysicsBody::Update(float dt) {
     acceleration = {0.f, 0.f, 0.f};
 }
 
-vec3 PhysicsBody::RungeKutta4(vec3 dydt, float h) {
+vec3 PhysicsBody::RungeKutta4(function<vec3(vec3, float)> dydt, vec3 y0, float h) {
     vec3 k1, k2, k3, k4;
 
-    k1 = dydt;
-    k2 = (dydt + k1/2.f);
-    k3 = (dydt + k2/2.f);
-    k4 = (dydt + k3);
+    float t0 = 0.f;
 
-    return (k1 + k2*2 + k3*2 + k4)*h/6.f;
+    k1 = dydt(y0, t0);
+    k2 = dydt(y0 + k1*h/2.f, t0 + h/2.f);
+    k3 = dydt(y0 + k2*h/2.f, t0 + h/2.f);
+    k4 = dydt(y0 + k3*h, t0 + h);
+
+    vec3 y1 = (k1 + k2*2 + k3*2 + k4)*h/6.f;
+    return y1;
 }
