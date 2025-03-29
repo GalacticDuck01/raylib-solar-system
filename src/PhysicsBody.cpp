@@ -1,5 +1,14 @@
 #include "PhysicsBody.hpp"
 
+PhysicsBody::PhysicsBody() {}
+
+PhysicsBody::PhysicsBody(vec3 position, vec3 velocity, vec3 acceleration, float mass) {
+    this->position = position;
+    this->velocity = velocity;
+    this->acceleration = acceleration;
+    this->mass = mass;
+}
+
 void PhysicsBody::Update(float dt) {
 
     position += RungeKutta4(velocity, dt);

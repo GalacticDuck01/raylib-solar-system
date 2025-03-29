@@ -11,7 +11,8 @@ public:
     vec3 acceleration = {0.f, 0.f, 0.f};
     float mass = 1.f;
 
-    PhysicsBody() {};
+    PhysicsBody();
+    PhysicsBody(vec3 position, vec3 velocity, vec3 acceleration, float mass);
     void Update(float dt);
 
     void ApplyInstantaneousForce(vec3 f) {
