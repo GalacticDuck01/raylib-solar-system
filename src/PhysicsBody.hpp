@@ -18,9 +18,9 @@ public:
     void Update(float dt);
 
     void ApplyInstantaneousForce(vec3 f) {
-        acceleration.x = f.x/mass;
-        acceleration.y = f.y/mass;
-        acceleration.z = f.z/mass;
+        acceleration.x += f.x/mass;
+        acceleration.y += f.y/mass;
+        acceleration.z += f.z/mass;
     }
     vec3 RungeKutta4(vec3 state, float h);
 };
