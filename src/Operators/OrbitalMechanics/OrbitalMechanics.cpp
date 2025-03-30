@@ -52,12 +52,13 @@ void OrbitalMechanics::CalcFutureStates(int steps) {
     }
 }
 
-void OrbitalMechanics::DrawTrajectories() {
+void OrbitalMechanics::DrawTrajectories(int nLines) {
     for (const auto& body : bodies) {
         int nPositions = body->futurePositions.size();
-        for (unsigned int is = 0; is < nPositions - 1; is++) {
+        int dp = nPositions > nLines ? nPositions/nLines : 1;
+        for (unsigned int is = 0; is < nPositions - dp; is += dp) {
             vec3 pos = body->futurePositions[is].second;
-            vec3 nextPos = body->futurePositions[is+1].second;
+            vec3 nextPos = body->futurePositions[is+dp].second;
 
             float alpha = 1.0f - exp(-(float)is/(0.1f*(float)nPositions));
 

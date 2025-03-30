@@ -29,6 +29,7 @@ int main() {
     orbitalMechanics.AddBody(star3);
     orbitalMechanics.AddBody(star4);
 
+    orbitalMechanics.CalcFutureStates(1e4);
 
     bool isPaused = true;
     
@@ -47,7 +48,7 @@ int main() {
 
         DrawGrid(30, 1.0f);
 
-        // orbitalMechanics.DrawTrajectories();
+        orbitalMechanics.DrawTrajectories(10000);
 
         star1.Draw(star1.futurePositions[0].second, 1.0f, star1.colour);
         star2.Draw(star2.futurePositions[0].second, 1.0f, star2.colour);

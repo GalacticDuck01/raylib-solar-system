@@ -29,5 +29,5 @@ public:
     int GetStepsPerUpdate() { return stepsThisUpdate; };
     float GetTimeSinceUpdate() { return timeSinceUpdate; };
 
-    void DrawTrajectories();
+    void DrawTrajectories(int nLines = 1000);
 };
