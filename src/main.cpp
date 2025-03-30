@@ -37,7 +37,7 @@ int main() {
 
         if (IsKeyPressed(KEY_P)) isPaused = !isPaused;
         if (!isPaused) {
-        if (GetFrameTime() != 0.f) orbitalMechanics.Update(GetFrameTime());
+            if (GetFrameTime() != 0.f) orbitalMechanics.RenderUpdate(GetFrameTime());
         }
 
         BeginDrawing();
@@ -49,10 +49,10 @@ int main() {
 
         // orbitalMechanics.DrawTrajectories();
 
-        star1.Draw(star1.position, 1.0f, star1.colour);
-        star2.Draw(star2.position, 1.0f, star2.colour);
-        star3.Draw(star3.position, 1.0f, star3.colour);
-        star4.Draw(star4.position, 1.0f, star4.colour);
+        star1.Draw(star1.futurePositions[0].second, 1.0f, star1.colour);
+        star2.Draw(star2.futurePositions[0].second, 1.0f, star2.colour);
+        star3.Draw(star3.futurePositions[0].second, 1.0f, star3.colour);
+        star4.Draw(star4.futurePositions[0].second, 1.0f, star4.colour);
 
         EndMode3D();
 

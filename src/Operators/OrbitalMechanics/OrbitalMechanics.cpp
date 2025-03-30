@@ -3,20 +3,23 @@
 #include <raymath.h>
 #include <math.h>
 
-void OrbitalMechanics::Update(float deltaTime) {
+void OrbitalMechanics::RenderUpdate(float deltaTime) {
     timeSinceUpdate += GetFrameTime();
-    stepsPerUpdate = 0;
+    stepsThisUpdate = 0;
+
     float dt = bodies[0]->futurePositions.front().first;
-    while (timeSinceUpdate >= dt) {
+    while ((timeSinceUpdate >= dt) and (bodies[0]->futurePositions.size() > 0)) {
         for (auto& body : bodies) {
             body->futurePositions.pop_front();
         }
 
         timeSinceUpdate -= dt;
-        stepsPerUpdate++;
+        stepsThisUpdate++;
         ApplyForces();
         dt = bodies[0]->futurePositions.front().first;
     }
+
+    if (stepsThisUpdate > 0) CalcFutureStates(stepsThisUpdate);
 }
 
 void OrbitalMechanics::ApplyForces() {
