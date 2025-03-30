@@ -11,17 +11,36 @@ PhysicsBody::PhysicsBody(vec3 position, vec3 velocity, vec3 acceleration, float 
     futurePositions.push_back({0.f, position});
 }
 
-void PhysicsBody::Update(float dt) {
+void PhysicsBody::Update(float& dt) {
 
     auto dvdt = [&](vec3 r, float t) { return acceleration; };
     auto drdt = [&](vec3 r, float t) { return velocity; };
 
-    position += RungeKutta4(drdt, position, dt);
+    vec3 dv, dr, dr2;
+
+    auto CalcError = [&]() {
+        // Compute with dt
+        dr = RungeKutta4(drdt, position, dt);
+
+        // Compute with 2*dt
+        dr2 = RungeKutta4(drdt, position, 2.0f*dt);
+
+        float error = (1.f/30.f)*(dr2 - dr).magnitude();
+        return error;
+    };
+
+    float error = CalcError();
+    while (error > 1e-5f) {
+        dt *= 0.5f;
+        error = CalcError();
+    }
+
+    position += dr;
     velocity += RungeKutta4(dvdt, velocity, dt);
 
     futurePositions.push_back({dt, position});
 
-    if (futurePositions.size() > 8000) futurePositions.pop_front();
+    dt *= 2.f;
 
     acceleration = {0.f, 0.f, 0.f};
 }
