@@ -4,22 +4,37 @@
 #include <math.h>
 
 void OrbitalMechanics::RenderUpdate(float deltaTime) {
-    timeSinceUpdate += GetFrameTime();
-    stepsThisUpdate = 0;
+    accumulatedTime += GetFrameTime();
+    stepsThisRenderCall = 0;
 
-    float dt = bodies[0]->futurePositions.front().first;
-    while ((timeSinceUpdate >= dt) and (bodies[0]->futurePositions.size() > 0)) {
+    if (bodies.size() == 0) return;
+
+    while (!bodies[0]->futurePositions.empty()) {
+        float dt = bodies[0]->futurePositions.front().first;
+
+        if (accumulatedTime < dt) break;
+
         for (auto& body : bodies) {
             body->futurePositions.pop_front();
         }
 
-        timeSinceUpdate -= dt;
-        stepsThisUpdate++;
-        ApplyForces();
-        dt = bodies[0]->futurePositions.front().first;
+        accumulatedTime -= dt;
+        stepsThisRenderCall++;
     }
 
-    if (stepsThisUpdate > 0) CalcFutureStates(stepsThisUpdate);
+    if (stepsThisRenderCall != 0) CalcFutureStates(stepsThisRenderCall);
+
+    // float dt = bodies[0]->futurePositions.front().first;
+    // while ((accumulatedTime >= dt) and (bodies[0]->futurePositions.size() > 0)) {
+    //     for (auto& body : bodies) {
+    //         body->futurePositions.pop_front();
+    //     }
+
+    //     accumulatedTime -= dt;
+    //     stepsThisRenderCall++;
+    //     ApplyForces();
+    //     dt = bodies[0]->futurePositions.front().first;
+    // }
 }
 
 void OrbitalMechanics::ApplyForces() {

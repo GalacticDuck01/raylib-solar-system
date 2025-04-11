@@ -15,10 +15,12 @@ file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
 file(GLOB_RECURSE HPP_HEADERS "src/*.hpp")
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
+    message("Building ${PROJECT_NAME} in Release mode")
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("Building ${PROJECT_NAME} in Debug mode")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 endif()
 

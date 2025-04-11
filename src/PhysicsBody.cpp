@@ -29,6 +29,8 @@ void PhysicsBody::Update(float& dt) {
         return error;
     };
 
+    // Note: This could be useful for the timestepping issue https://www.gafferongames.com/post/fix_your_timestep/
+
     float error = CalcError();
     while (error > 1e-5f) {
         dt *= 0.5f;
