@@ -51,10 +51,6 @@ void OrbitalMechanics::ApplyForces() {
             other.ApplyInstantaneousForce(F*-1.f);
         }
     }
-
-    for (auto& body : bodies) {
-        body->Update(dt);
-    }
 }
 
 void OrbitalMechanics::AddBody(PhysicsBody& body) {
@@ -64,6 +60,11 @@ void OrbitalMechanics::AddBody(PhysicsBody& body) {
 void OrbitalMechanics::CalcFutureStates(int steps) {
     for (unsigned int is = 0; is < steps; is++) {
         ApplyForces();
+        bodies[0]->DetermineStepSize(dt);
+
+        for (auto& body : bodies) {
+            body->Update(dt);
+        }
     }
 }
 

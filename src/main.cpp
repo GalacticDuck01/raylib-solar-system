@@ -7,7 +7,7 @@ int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(GetScreenWidth(), GetScreenHeight(), "Solar System");
     SetTargetFPS(60);
-    // ToggleFullscreen();
+    ToggleFullscreen();
 
     DisableCursor();
 
@@ -29,7 +29,7 @@ int main() {
     orbitalMechanics.AddBody(star3);
     orbitalMechanics.AddBody(star4);
 
-    orbitalMechanics.CalcFutureStates(2e4);
+    orbitalMechanics.CalcFutureStates(2e5);
 
     bool isPaused = true;
     

@@ -11,12 +11,24 @@ PhysicsBody::PhysicsBody(vec3 position, vec3 velocity, vec3 acceleration, float 
     futurePositions.push_back({0.f, position});
 }
 
-void PhysicsBody::Update(float& dt) {
+void PhysicsBody::Update(float dt) {
 
     auto dvdt = [&](vec3 r, float t) { return acceleration; };
     auto drdt = [&](vec3 r, float t) { return velocity; };
 
-    vec3 dv, dr, dr2;
+    position += RungeKutta4(drdt, position, dt);
+    velocity += RungeKutta4(dvdt, velocity, dt);
+
+    futurePositions.push_back({dt, position});
+
+    acceleration = {0.f, 0.f, 0.f};
+}
+
+void PhysicsBody::DetermineStepSize(float& dt) {
+    auto dvdt = [&](vec3 r, float t) { return acceleration; };
+    auto drdt = [&](vec3 r, float t) { return velocity; };
+
+    vec3 dr, dr2;
 
     auto CalcError = [&]() {
         // Compute with dt
@@ -32,19 +44,12 @@ void PhysicsBody::Update(float& dt) {
     // Note: This could be useful for the timestepping issue https://www.gafferongames.com/post/fix_your_timestep/
 
     float error = CalcError();
-    while (error > 1e-5f) {
+    while (error > 1e-8f) {
         dt *= 0.5f;
         error = CalcError();
     }
 
-    position += dr;
-    velocity += RungeKutta4(dvdt, velocity, dt);
-
-    futurePositions.push_back({dt, position});
-
     dt *= 2.f;
-
-    acceleration = {0.f, 0.f, 0.f};
 }
 
 vec3 PhysicsBody::RungeKutta4(function<vec3(vec3, float)> dydt, vec3 y0, float h) {
