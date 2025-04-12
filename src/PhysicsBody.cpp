@@ -44,12 +44,10 @@ void PhysicsBody::DetermineStepSize(float& dt) {
     // Note: This could be useful for the timestepping issue https://www.gafferongames.com/post/fix_your_timestep/
 
     float error = CalcError();
-    while (error > 1e-8f) {
+    while (error > 1e-5f) {
         dt *= 0.5f;
         error = CalcError();
     }
-
-    dt *= 2.f;
 }
 
 vec3 PhysicsBody::RungeKutta4(function<vec3(vec3, float)> dydt, vec3 y0, float h) {

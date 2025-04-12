@@ -65,6 +65,8 @@ void OrbitalMechanics::CalcFutureStates(int steps) {
         for (auto& body : bodies) {
             body->Update(dt);
         }
+
+        dt *= 2.f;
     }
 }
 
