@@ -12,7 +12,7 @@ using namespace std;
 
 class OrbitalMechanics : public Operator {
 private:
-    float G = 10.0f;
+    float G = 1.0f;
     float dt = 0.0001f;
     float accumulatedTime = 0.f;
     int stepsThisRenderCall = 0;

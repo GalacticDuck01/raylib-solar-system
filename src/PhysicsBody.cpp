@@ -28,24 +28,20 @@ void PhysicsBody::DetermineStepSize(float& dt) {
     auto dvdt = [&](vec3 r, float t) { return acceleration; };
     auto drdt = [&](vec3 r, float t) { return velocity; };
 
-    vec3 dr, dr2;
-
     auto CalcError = [&]() {
-        // Compute with dt
-        dr = RungeKutta4(drdt, position, dt);
-
-        // Compute with 2*dt
-        dr2 = RungeKutta4(drdt, position, 2.0f*dt);
-
-        float error = (1.f/30.f)*(dr2 - dr).magnitude();
+        float dv = velocity.magnitude() + RungeKutta4(dvdt, velocity + RungeKutta4(dvdt, velocity, dt), dt).magnitude();
+        float dv2 = velocity.magnitude() + RungeKutta4(dvdt, velocity, 2.0f*dt).magnitude();
+        float error = (1.f/30.f)*(dv2 - dv)/dv;
         return error;
     };
 
     // Note: This could be useful for the timestepping issue https://www.gafferongames.com/post/fix_your_timestep/
 
+    float acceptableError = 1e-7;
+
     float error = CalcError();
-    while (error > 1e-5f) {
-        dt *= 0.5f;
+    while (error > acceptableError) {
+        dt *= 0.9f*pow(acceptableError/error, 0.25);
         error = CalcError();
     }
 }
@@ -54,10 +50,11 @@ vec3 PhysicsBody::RungeKutta4(function<vec3(vec3, float)> dydt, vec3 y0, float h
     vec3 k1, k2, k3, k4;
 
     float t0 = 0.f;
+    float halfH = h/2.f;
 
     k1 = dydt(y0, t0);
-    k2 = dydt(y0 + k1*h/2.f, t0 + h/2.f);
-    k3 = dydt(y0 + k2*h/2.f, t0 + h/2.f);
+    k2 = dydt(y0 + k1*halfH, t0 + halfH);
+    k3 = dydt(y0 + k2*halfH, t0 + halfH);
     k4 = dydt(y0 + k3*h, t0 + h);
 
     vec3 y1 = (k1 + k2*2 + k3*2 + k4)*h/6.f;

@@ -7,7 +7,7 @@ int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(GetScreenWidth(), GetScreenHeight(), "Solar System");
     SetTargetFPS(60);
-    ToggleFullscreen();
+    // ToggleFullscreen();
 
     DisableCursor();
 
@@ -18,10 +18,10 @@ int main() {
     Star star3 = Star(10.f, 1, { 0.f, 0.f,  10.f}, {0.f, 0.f, 0.f}, GREEN,  3);
     Star star4 = Star(10.f, 1, { 10.f, 0.f,  0.f}, {0.f, 0.f, 0.f}, YELLOW, 3);
 
-    star1.velocity = (star2.position - star1.position).normalised()*4.f;
-    star2.velocity = (star3.position - star2.position).normalised()*4.f;
-    star3.velocity = (star4.position - star3.position).normalised()*4.f;
-    star4.velocity = (star1.position - star4.position).normalised()*4.f;
+    star1.velocity = (star2.position - star1.position).normalised();
+    star2.velocity = (star3.position - star2.position).normalised();
+    star3.velocity = (star4.position - star3.position).normalised();
+    star4.velocity = (star1.position - star4.position).normalised();
     
     OrbitalMechanics orbitalMechanics = OrbitalMechanics();
     orbitalMechanics.AddBody(star1);
