@@ -5,10 +5,10 @@
 using namespace std;
 
 struct vec3 {
-    float x, y, z;
+    double x, y, z;
 
     vec3() : x(0), y(0), z(0) {};
-    vec3(float x, float y, float z) : x(x), y(y), z(z) {};
+    vec3(double x, double y, double z) : x(x), y(y), z(z) {};
 
     /**
      * @brief 3D vector addition
@@ -62,7 +62,7 @@ struct vec3 {
      * @param f the factor to multiply with
      * @return a new vector with the elements of this vector scaled by f
      */
-    vec3 operator*(float f) const {
+    vec3 operator*(double f) const {
         return vec3(x*f, y*f, z*f);
     }
 
@@ -72,7 +72,7 @@ struct vec3 {
      * @param f the factor to multiply with
      * @return a reference to this vector, with the elements of this vector scaled by f
      */
-    vec3 operator*=(float f) {
+    vec3 operator*=(double f) {
         x *= f;
         y *= f;
         z *= f;
@@ -85,7 +85,7 @@ struct vec3 {
      * @param f the factor to divide by
      * @return a new vector with the elements of this vector divided by f
      */
-    vec3 operator/(float f) const {
+    vec3 operator/(double f) const {
         return vec3(x/f, y/f, z/f);
     }
 
@@ -95,7 +95,7 @@ struct vec3 {
      * @param f the factor to divide by
      * @return a reference to this vector, with the elements of this vector divided by f
      */
-    vec3 operator/=(float f) {
+    vec3 operator/=(double f) {
         x /= f;
         y /= f;
         z /= f;
@@ -108,7 +108,7 @@ struct vec3 {
      * @param v the vector to calculate the dot product with
      * @return the dot product of this vector and v
      */
-    float operator*(const vec3& v) const {
+    double operator*(const vec3& v) const {
         return x*v.x + y*v.y + z*v.z;
     }
 
@@ -129,7 +129,7 @@ struct vec3 {
  * @return The magnitude of the vector
  */
 
-    float magnitude() const {
+    double magnitude() const {
         return sqrt(x*x + y*y + z*z);
     }
 
@@ -140,7 +140,7 @@ struct vec3 {
      *
      * @return The magnitude of the vector, squared
      */
-    float magnitudeSquared() const {
+    double magnitudeSquared() const {
         return x*x + y*y + z*z;
     }
 
@@ -150,7 +150,7 @@ struct vec3 {
      * This modifies the vector in-place. If you want a new vector that is normalised, use the normalised() function
      */
     void normalise() {
-        float m = magnitude();
+        double m = magnitude();
         x /= m;
         y /= m;
         z /= m;
@@ -164,7 +164,7 @@ struct vec3 {
      * @return A new vector, normalised to have a length of 1
      */
     vec3 normalised() {
-        float m = magnitude();
+        double m = magnitude();
         return vec3(x/m, y/m, z/m);
     }
 };

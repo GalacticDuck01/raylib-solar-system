@@ -7,7 +7,7 @@ Icosphere::Icosphere() {
 
 void Icosphere::GenerateModel() {
     // Create the icosphere, very nicely sourced from http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
-    const float t = (1.0f + sqrt(5.0f)) / 2.0f; // Golden ratio
+    const double t = (1.0f + sqrt(5.0f)) / 2.0f; // Golden ratio
     vertices = {
         vec3{-1,  t,  0}.normalised(),
         vec3{ 1,  t,  0}.normalised(),
@@ -129,7 +129,7 @@ void Icosphere::SetResolution(int resolution) {
     GenerateModel();
 }
 
-void Icosphere::Draw(vec3 position, float radius, Color colour) {
+void Icosphere::Draw(vec3 position, double radius, Color colour) {
     for (const auto& tri : triangles) {
         vec3 v1 = position + vertices[tri.index0]*radius;
         vec3 v2 = position + vertices[tri.index1]*radius;
@@ -137,17 +137,17 @@ void Icosphere::Draw(vec3 position, float radius, Color colour) {
 
         vec3 pointSource = {1, 1, 1};
         vec3 avgV = (v1 + v2 + v3) / 3.0f;
-        // float distanceFromSource = max(max((pointSource - avgV).magnitude(), 0.1f), 1.0f);
-        float distanceFromSource = 1.0f;
+        // double distanceFromSource = max(max((pointSource - avgV).magnitude(), 0.1f), 1.0f);
+        double distanceFromSource = 1.0f;
 
         Color modifedColour = colour;
         modifedColour.r = colour.r/(distanceFromSource*distanceFromSource);
         modifedColour.g = colour.g/(distanceFromSource*distanceFromSource);
         modifedColour.b = colour.b/(distanceFromSource*distanceFromSource);
 
-        Vector3 raylibV1 = {v1.x, v1.y, v1.z};
-        Vector3 raylibV2 = {v2.x, v2.y, v2.z};
-        Vector3 raylibV3 = {v3.x, v3.y, v3.z};
+        Vector3 raylibV1 = {(float)v1.x, (float)v1.y, (float)v1.z};
+        Vector3 raylibV2 = {(float)v2.x, (float)v2.y, (float)v2.z};
+        Vector3 raylibV3 = {(float)v3.x, (float)v3.y, (float)v3.z};
         DrawTriangle3D(raylibV1, raylibV2, raylibV3, modifedColour);
     }
 

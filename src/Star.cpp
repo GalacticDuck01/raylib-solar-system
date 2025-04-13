@@ -1,13 +1,13 @@
 #include "Star.hpp"
 
 Star::Star(
-    float mass,
-    float radius,
+    double mass,
+    double radius,
     vec3 position,
     vec3 velocity,
     Color colour,
     int resolution)
-    : PhysicsBody(position, velocity, {0.f, 0.f, 0.f}, mass) {
+    : PhysicsBody(position, velocity, {0., 0., 0.}, mass) {
 
     this->colour = colour;
     this->radius = radius;

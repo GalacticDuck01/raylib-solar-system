@@ -16,7 +16,7 @@ class Icosphere {
     public:
         Icosphere();
         ~Icosphere() {};
-        void Draw(vec3 position, float radius, Color colour);
+        void Draw(vec3 position, double radius, Color colour);
         void SetResolution(int resolution);
     private:
         int resolution;

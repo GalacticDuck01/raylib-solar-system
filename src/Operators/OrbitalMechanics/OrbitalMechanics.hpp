@@ -12,9 +12,9 @@ using namespace std;
 
 class OrbitalMechanics : public Operator {
 private:
-    float G = 1.0f;
-    float dt = 0.0001f;
-    float accumulatedTime = 0.f;
+    double G = 1.0;
+    double dt = 0.0001;
+    double accumulatedTime = 0.;
     int stepsThisRenderCall = 0;
 
 public:
@@ -22,12 +22,12 @@ public:
 
     OrbitalMechanics() : Operator() {};
     void AddBody(PhysicsBody& body);
-    void RenderUpdate(float deltaTime) override;
+    void RenderUpdate(double deltaTime) override;
     void ApplyForces();
     void CalcFutureStates(int steps);
 
     int GetStepsPerUpdate() { return stepsThisRenderCall; };
-    float GetAccumulatedTime() { return accumulatedTime; };
+    double GetAccumulatedTime() { return accumulatedTime; };
 
     void DrawTrajectories(int nLines = 1000);
 };

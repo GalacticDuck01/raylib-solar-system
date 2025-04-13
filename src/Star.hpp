@@ -7,9 +7,9 @@
 
 class Star : public PhysicsBody, public Icosphere {
 private:
-    float radius;
+    double radius;
 public:
-    Star(float mass, float radius, vec3 position, vec3 velocity, Color colour, int resolution);
+    Star(double mass, double radius, vec3 position, vec3 velocity, Color colour, int resolution);
 
     Color colour;
 };

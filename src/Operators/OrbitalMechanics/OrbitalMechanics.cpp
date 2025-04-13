@@ -3,14 +3,14 @@
 #include <raymath.h>
 #include <math.h>
 
-void OrbitalMechanics::RenderUpdate(float deltaTime) {
+void OrbitalMechanics::RenderUpdate(double deltaTime) {
     accumulatedTime += GetFrameTime();
     stepsThisRenderCall = 0;
 
     if (bodies.size() == 0) return;
 
     while (!bodies[0]->futurePositions.empty()) {
-        float dt = bodies[0]->futurePositions.front().first;
+        double dt = bodies[0]->futurePositions.front().first;
 
         if (accumulatedTime < dt) break;
 
@@ -23,18 +23,6 @@ void OrbitalMechanics::RenderUpdate(float deltaTime) {
     }
 
     if (stepsThisRenderCall != 0) CalcFutureStates(stepsThisRenderCall);
-
-    // float dt = bodies[0]->futurePositions.front().first;
-    // while ((accumulatedTime >= dt) and (bodies[0]->futurePositions.size() > 0)) {
-    //     for (auto& body : bodies) {
-    //         body->futurePositions.pop_front();
-    //     }
-
-    //     accumulatedTime -= dt;
-    //     stepsThisRenderCall++;
-    //     ApplyForces();
-    //     dt = bodies[0]->futurePositions.front().first;
-    // }
 }
 
 void OrbitalMechanics::ApplyForces() {
@@ -48,7 +36,7 @@ void OrbitalMechanics::ApplyForces() {
 
             vec3 F = r.normalised()*(G*body.mass*other.mass/r.magnitudeSquared());
             body.ApplyInstantaneousForce(F);
-            other.ApplyInstantaneousForce(F*-1.f);
+            other.ApplyInstantaneousForce(F*-1.);
         }
     }
 }
@@ -66,7 +54,7 @@ void OrbitalMechanics::CalcFutureStates(int steps) {
             body->Update(dt);
         }
 
-        dt *= 2.f;
+        dt *= 2.;
     }
 }
 
@@ -78,9 +66,9 @@ void OrbitalMechanics::DrawTrajectories(int nLines) {
             vec3 pos = body->futurePositions[is].second;
             vec3 nextPos = body->futurePositions[is+dp].second;
 
-            float alpha = 1.0f - exp(-(float)is/(0.1f*(float)nPositions));
+            double alpha = 1.0f - exp(-(double)is/(0.1f*(double)nPositions));
 
-            DrawLine3D({pos.x, pos.y, pos.z}, {nextPos.x, nextPos.y, nextPos.z}, Fade(WHITE, alpha));
+            DrawLine3D({(float)pos.x, (float)pos.y, (float)pos.z}, {(float)nextPos.x, (float)nextPos.y, (float)nextPos.z}, Fade(WHITE, alpha));
         }
     }
 }
