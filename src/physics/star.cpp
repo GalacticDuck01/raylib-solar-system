@@ -69,11 +69,12 @@ void Star::generateIcosphereMesh(unsigned int nDivisions) {
          3,  6,  8,
          3,  8,  9,
 
-         4,  9,  1,
-         2,  4,  5,
-         6,  2, 11,
-         8,  6, 10,
-         9,  8,  7
+         4,  9,  5,
+         2,  4, 11,
+         6,  2, 10,
+         8,  6,  7,
+         9,  8,  1
+
     };
 
     log("[Star] Caching midpoints...");
