@@ -1,17 +1,13 @@
 #pragma once
 
 #include "raylib.h"
+#include "3d/model_3d.hpp"
 
-class Star {
+class Star  : public Model3D {
 public:
     Star(Vector3 position, float radius, unsigned int nDivisions);
-
-    void draw();
 private:
     float radius;
-    Vector3 position;
-    Mesh mesh;
-    Model model;
 
     void generateIcosphereMesh(unsigned int nDivisions);
 };

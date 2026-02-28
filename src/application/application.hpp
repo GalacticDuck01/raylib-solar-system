@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "managers/resource_manager.hpp"
-#include "physics/star.hpp"
 
 using namespace std;
 
@@ -20,7 +19,7 @@ enum class AppState {
 class Application {
 public:
     AppState state = AppState::STARTUP;
-    ResourceManager resourceManager;
+    ResourceManager* resourceManager = ResourceManager::get();
 
     Application() = default;
     ~Application() { CloseWindow(); };

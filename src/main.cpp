@@ -1,6 +1,7 @@
 #include "raylib.h"
 
 #include "application/application.hpp"
+#include "physics/star.hpp"
 #include "utils/utils.hpp"
 
 constexpr auto SCREEN_WIDTH  = 1920;
@@ -13,6 +14,10 @@ int main() {
     std::string windowState = IsWindowMaximized() ? "maximized" : "default";
     log("App initialised with " + windowState + " window size.");
     app.setFPS(60);
+    
+    Star star = Star({0, 0, 0}, 2, 3);
+    app.resourceManager->loadNode("star", star);
+
     app.run();
 
     return 0;

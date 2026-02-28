@@ -1,33 +1,42 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "raylib.h"
+#include "3d/node_3d.hpp"
 
 class ResourceManager
 {
 public:
-    ResourceManager() = default;
-    
-    ~ResourceManager();
+    static ResourceManager* get() {
+        static ResourceManager instance;
+        return &instance;
+    }
 
     ResourceManager(const ResourceManager&) = delete;
 
     ResourceManager& operator=(const ResourceManager&) = delete;
 
-    void loadTexture(std::string texturePath) { texturesToLoad.push_back(texturePath); };
+    void loadNode(const std::string& name, const Node3D& node);
 
-    void loadSound(std::string soundPath) { soundsToLoad.push_back(soundPath); };
+    void loadSound(std::string soundPath);
+
+    void loadTexture(std::string texturePath);
 
     void tick();
 
+    void render();
+
 private:
-    const unsigned int MAX_RESOURCES_TO_LOAD_PER_TICK = 1;
+    static ResourceManager* instance;
 
-    std::vector<std::string> texturesToLoad;
-    std::vector<std::string> soundsToLoad;
+    std::unordered_map<std::string, Texture2D> textures;
+    std::unordered_map<std::string, Sound> sounds;
+    std::unordered_map<std::string, const Node3D*> nodes;
 
-    std::vector<Texture2D> loadedTextures;
-    std::vector<Sound> loadedSounds;
+    ResourceManager() = default;
+    
+    ~ResourceManager();
 };

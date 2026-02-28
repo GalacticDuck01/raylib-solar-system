@@ -1,46 +1,52 @@
 #include "resource_manager.hpp"
 #include "utils/utils.hpp"
 
+ResourceManager* ResourceManager::instance = nullptr;
+
 ResourceManager::~ResourceManager() {
-    texturesToLoad.clear();
-    soundsToLoad.clear();
-
-    for (const Texture& texture : loadedTextures) {
-        UnloadTexture(texture);
+    nodes.clear();
+    for (const auto& pair : sounds) {
+        UnloadSound(pair.second);
     }
-    loadedTextures.clear();
+    sounds.clear();
+    for (const auto& pair : textures) {
+        UnloadTexture(pair.second);
+    }
+    textures.clear();
+}
 
-    loadedSounds.clear();
+void ResourceManager::loadNode(const std::string& name, const Node3D& node) {
+    if (nodes.find(name) != nodes.end()) {
+        warning("[ResourceManager::loadNode] Unnecessary load. Node '" + name + "' already loaded.");
+        return;
+    }
+
+    nodes[name] = &node;
+}
+
+void ResourceManager::loadSound(std::string soundPath) {
+    if (!FileExists(soundPath.c_str())) {
+        error("[ResourceManager::loadSound] Cannot find sound file: '" + soundPath + "'");
+    }
+
+    Sound sound = LoadSound(soundPath.c_str());
+    sounds[soundPath] = sound;
+}
+
+void ResourceManager::loadTexture(std::string texturePath) {
+    if (!FileExists(texturePath.c_str())) {
+        error("[ResourceManager::loadTexture] Cannot find texture file: '" + texturePath + "'");
+    }
+
+    Texture2D texture = LoadTexture(texturePath.c_str());
+    textures[texturePath] = texture;
 }
 
 void ResourceManager::tick() {
-    unsigned int resourcesToLoad = MAX_RESOURCES_TO_LOAD_PER_TICK;
+}
 
-    for (const std::string& texturePath : texturesToLoad) {
-        if (resourcesToLoad <= 0) {
-            break;
-        }
-        if (!FileExists(texturePath.c_str())) {
-            error("[ResourceManager::tick] Cannot find texture file: " + texturePath);
-        }
-
-        Texture2D texture = LoadTexture(texturePath.c_str());
-        loadedTextures.push_back(texture);
-
-        resourcesToLoad--;
-    }
-    
-    for (const std::string& soundPath : soundsToLoad) {
-        if (resourcesToLoad <= 0) {
-            break;
-        }
-        if (!FileExists(soundPath.c_str())) {
-            error("[ResourceManager::tick] Cannot find sound file: " + soundPath);
-        }
-
-        Sound sound = LoadSound(soundPath.c_str());
-        loadedSounds.push_back(sound);
-
-        resourcesToLoad--;
+void ResourceManager::render() {
+    for (const auto& pair : nodes) {
+        pair.second->draw();
     }
 }

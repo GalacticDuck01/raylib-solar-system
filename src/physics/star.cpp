@@ -1,5 +1,4 @@
 #include "star.hpp"
-
 #include <stdint.h>
 #include <unordered_map>
 #include <vector>
@@ -9,7 +8,7 @@
 #include "utils/utils.hpp"
 
 Star::Star(Vector3 position, float radius, unsigned int nDivisions) {
-    this->position = position;
+    setPosition(position);
 
     if (radius <= 0) {
         warning("[Star::Star] Radius must be +ve. Defaulting to 1.");
@@ -18,12 +17,15 @@ Star::Star(Vector3 position, float radius, unsigned int nDivisions) {
     this->radius = radius;
 
     generateIcosphereMesh(nDivisions);
+
+    setTint(YELLOW);
 }
 
 void Star::generateIcosphereMesh(unsigned int nDivisions) {
     const float t = GOLDEN_RATIO;
 
-    log("[Star] Generating icosphere mesh with " + std::to_string(nDivisions) + " subdivisions...");
+    std::string logMsg = "[Star] Generating icosphere mesh with radius " + std::to_string(radius) + " and " + std::to_string(nDivisions) + " subdivisions...";
+    log(logMsg);
 
     std::vector<Vector3> vertices = {
         {-1,  t,  0},
@@ -147,19 +149,9 @@ void Star::generateIcosphereMesh(unsigned int nDivisions) {
         mesh.normals[3*i + 2] = vertex.z / radius;
     }
 
-    this->mesh = mesh;
-
-    log("[Star] Uploading mesh to GPU...");
-
-    UploadMesh(&this->mesh, false);
-
     log("[Star] Loading model from mesh...");
 
-    model = LoadModelFromMesh(this->mesh);
+    setMesh(mesh);
 
     log("[Star] Generated icosphere mesh with " + std::to_string(mesh.vertexCount) + " vertices and " + std::to_string(mesh.triangleCount) + " triangles.");
-}
-
-void Star::draw() {
-    DrawModel(model, position, 1.0f, RED);
 }

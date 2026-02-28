@@ -79,12 +79,9 @@ void Application::draw() {
     const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
     DrawText(text, 0, 0, 20, BLACK);
 
-    Star star = Star({0, 0, 0}, 1, 2);
-
-     DrawGrid(10, 1.0f);
-
      BeginMode3D(camera);
-        star.draw();
+        DrawGrid(10, 1.0f);
+        resourceManager->render();
      EndMode3D();
 
      DrawFPS(10, 10);
