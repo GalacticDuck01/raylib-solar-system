@@ -16,6 +16,7 @@ int main() {
     app.setFPS(60);
     
     Star star = Star({0, 0, 0}, 2, 4);
+    star.setFlatShading(true);
     app.resourceManager->loadNode("star", star);
 
     app.run();

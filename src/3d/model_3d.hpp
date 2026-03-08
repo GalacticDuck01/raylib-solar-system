@@ -46,6 +46,8 @@ public:
 
     void setTint(Color tint) { this->tint = tint; }
     Color getTint() const { return tint; }
+    void setFlatShading(bool enabled) { flatShading = enabled; }
+    bool getFlatShading() const { return flatShading; }
 
     void draw(const Shader& shader) const {
         if (!loaded) return;
@@ -55,6 +57,8 @@ public:
         Vector4 normalizedColor = ColorNormalize(tint);
         Vector3 tintRGB = { normalizedColor.x, normalizedColor.y, normalizedColor.z };
         SetShaderValue(shader, GetShaderLocation(shader, "tint"), &tintRGB, SHADER_UNIFORM_VEC3);
+        int flatShadingUniform = flatShading ? 1 : 0;
+        SetShaderValue(shader, GetShaderLocation(shader, "flatShading"), &flatShadingUniform, SHADER_UNIFORM_INT);
 
         model.materials[0].shader = shader;
         DrawModel(model, position, 1.0f, tint);
@@ -71,5 +75,6 @@ private:
     Mesh mesh = { 0 };
     Model model = { 0 };
     Color tint = YELLOW;
+    bool flatShading = false;
     bool loaded = false;
 };

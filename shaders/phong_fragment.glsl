@@ -3,10 +3,12 @@
 uniform vec3 tint;
 uniform vec3 cameraPosition;
 uniform vec3 lightPosition;
+uniform int flatShading;
 
 out vec4 FragColor;
 
 in vec3 FragPosition;
+in vec3 FragNormal;
 
 void main() {
     vec3 lightAmbient = vec3(0.5, 0.5, 0.5);
@@ -23,7 +25,10 @@ void main() {
     // lighting stays constant across the entire triangle.
     vec3 positionDx = dFdx(FragPosition);
     vec3 positionDy = dFdy(FragPosition);
-    vec3 normal = normalize(cross(positionDx, positionDy));
+    vec3 flatNormal = normalize(cross(positionDx, positionDy));
+    vec3 smoothNormal = normalize(FragNormal);
+    float flatWeight = float(clamp(flatShading, 0, 1));
+    vec3 normal = normalize(mix(smoothNormal, flatNormal, flatWeight));
 
     vec3 lightDirection = normalize(lightPosition - FragPosition);
     float diff = max(dot(normal, lightDirection), 0.0);
