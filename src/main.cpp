@@ -10,7 +10,7 @@ constexpr auto SCREEN_HEIGHT = 1080;
 int main() {
 
     Application app = Application();
-    app.init("Window", SCREEN_WIDTH, SCREEN_HEIGHT, FLAG_WINDOW_MAXIMIZED | FLAG_WINDOW_RESIZABLE);
+    app.init("Window", SCREEN_WIDTH, SCREEN_HEIGHT, FLAG_WINDOW_MAXIMIZED | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
     std::string windowState = IsWindowMaximized() ? "maximized" : "default";
     log("App initialised with " + windowState + " window size.");
     app.setFPS(60);

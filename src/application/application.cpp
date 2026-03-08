@@ -23,6 +23,17 @@ void Application::init(const char* title, int width, int height, unsigned int fl
 
     // Initialise audio
     InitAudioDevice();
+
+    // Initialise camera
+    camera.position = (Vector3){ 0.0f, 10.0f, 10.0f };  // Camera position
+    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
+    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
+    camera.fovy = 45.0f;                                // Camera field-of-view Y
+    camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
+
+    // Initialise shader
+    shader = LoadShader("shaders/phong_vertex.glsl", "shaders/phong_fragment.glsl");
+
     log("[Raylib] Initialisation finished");
 }
 
@@ -64,16 +75,13 @@ void Application::setFPS(unsigned int fps) {
 }
 
 void Application::draw() {
+    SetShaderValue(shader, GetShaderLocation(shader, "cameraPosition"), &camera.position, SHADER_UNIFORM_VEC3);
+
     BeginDrawing();
 
     ClearBackground(RAYWHITE);
 
-    Camera3D camera = { 0 };
-    camera.position = (Vector3){ 0.0f, 10.0f, 10.0f };  // Camera position
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-    camera.fovy = 45.0f;                                // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
+    UpdateCamera(&camera, CAMERA_ORBITAL);
 
     const char* text = "YARRR!";
     const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
@@ -81,14 +89,12 @@ void Application::draw() {
 
      BeginMode3D(camera);
         DrawGrid(10, 1.0f);
-        resourceManager->render();
+        resourceManager->render(shader);
      EndMode3D();
 
      DrawFPS(10, 10);
 
      DrawText("Hello, world!", 10, 40, 20, DARKGRAY);
-
-     log("Drawing frame...");
 
     EndDrawing();
 }

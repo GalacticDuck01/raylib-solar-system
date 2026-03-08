@@ -47,9 +47,16 @@ public:
     void setTint(Color tint) { this->tint = tint; }
     Color getTint() const { return tint; }
 
-    void draw() const {
+    void draw(const Shader& shader) const {
         if (!loaded) return;
-        std::cout << "Drawing model at position (" << position.x << ", " << position.y << ", " << position.z << ") with tint (" << tint.r << ", " << tint.g << ", " << tint.b << ", " << tint.a << ")" << std::endl;
+
+        // DrawModelWires(model, position, 1.0f, BLACK);
+
+        Vector4 normalizedColor = ColorNormalize(tint);
+        Vector3 tintRGB = { normalizedColor.x, normalizedColor.y, normalizedColor.z };
+        SetShaderValue(shader, GetShaderLocation(shader, "blockColor"), &tintRGB, SHADER_UNIFORM_VEC3);
+
+        model.materials[0].shader = shader;
         DrawModel(model, position, 1.0f, tint);
     }
 private:

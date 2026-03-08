@@ -19,6 +19,8 @@ enum class AppState {
 class Application {
 public:
     AppState state = AppState::STARTUP;
+    Camera3D camera = { 0 };
+    Shader shader = { 0 };
     ResourceManager* resourceManager = ResourceManager::get();
 
     Application() = default;

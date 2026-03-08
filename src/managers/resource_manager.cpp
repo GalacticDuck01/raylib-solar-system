@@ -45,8 +45,8 @@ void ResourceManager::loadTexture(std::string texturePath) {
 void ResourceManager::tick() {
 }
 
-void ResourceManager::render() {
+void ResourceManager::render(const Shader& shader) {
     for (const auto& pair : nodes) {
-        pair.second->draw();
+        pair.second->draw(shader);
     }
 }

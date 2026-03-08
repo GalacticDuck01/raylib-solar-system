@@ -27,7 +27,7 @@ public:
 
     void tick();
 
-    void render();
+    void render(const Shader& shader);
 
 private:
     static ResourceManager* instance;

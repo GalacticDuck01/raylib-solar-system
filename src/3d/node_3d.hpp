@@ -9,7 +9,7 @@ public:
 
     virtual void update() {};
 
-    virtual void draw() const {};
+    virtual void draw(const Shader& shader) const {};
 
     void setPosition(Vector3 position) { this->position = position; };
     Vector3 getPosition() const { return this->position; };
