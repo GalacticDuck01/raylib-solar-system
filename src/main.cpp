@@ -15,7 +15,7 @@ int main() {
     log("App initialised with " + windowState + " window size.");
     app.setFPS(60);
     
-    Star star = Star({0, 0, 0}, 2, 3);
+    Star star = Star({0, 0, 0}, 2, 4);
     app.resourceManager->loadNode("star", star);
 
     app.run();

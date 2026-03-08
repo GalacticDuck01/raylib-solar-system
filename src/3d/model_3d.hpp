@@ -54,7 +54,7 @@ public:
 
         Vector4 normalizedColor = ColorNormalize(tint);
         Vector3 tintRGB = { normalizedColor.x, normalizedColor.y, normalizedColor.z };
-        SetShaderValue(shader, GetShaderLocation(shader, "blockColor"), &tintRGB, SHADER_UNIFORM_VEC3);
+        SetShaderValue(shader, GetShaderLocation(shader, "tint"), &tintRGB, SHADER_UNIFORM_VEC3);
 
         model.materials[0].shader = shader;
         DrawModel(model, position, 1.0f, tint);

@@ -75,13 +75,15 @@ void Application::setFPS(unsigned int fps) {
 }
 
 void Application::draw() {
-    SetShaderValue(shader, GetShaderLocation(shader, "cameraPosition"), &camera.position, SHADER_UNIFORM_VEC3);
-
     BeginDrawing();
 
     ClearBackground(RAYWHITE);
 
-    UpdateCamera(&camera, CAMERA_ORBITAL);
+    Vector3 lightPos = { -10.0f, 10.0f, 1.0f };
+
+    UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+    SetShaderValue(shader, GetShaderLocation(shader, "cameraPosition"), &camera.position, SHADER_UNIFORM_VEC3);
+    SetShaderValue(shader, GetShaderLocation(shader, "lightPosition"), &lightPos, SHADER_UNIFORM_VEC3);
 
     const char* text = "YARRR!";
     const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
