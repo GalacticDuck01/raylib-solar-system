@@ -24,9 +24,6 @@ Star::Star(Vector3 position, float radius, unsigned int nDivisions) {
 void Star::generateIcosphereMesh(unsigned int nDivisions) {
     const float t = GOLDEN_RATIO;
 
-    std::string logMsg = "[Star] Generating icosphere mesh with radius " + std::to_string(radius) + " and " + std::to_string(nDivisions) + " subdivisions...";
-    log(logMsg);
-
     std::vector<Vector3> vertices = {
         {-1,  t,  0},
         { 1,  t,  0},
@@ -44,13 +41,9 @@ void Star::generateIcosphereMesh(unsigned int nDivisions) {
         {-t,  0,  1}
     };
 
-    log("[Star] Normalizing vertices...");
-
     for (unsigned int iv = 0; iv < vertices.size(); iv++) {
         vertices[iv] = Vector3Normalize(vertices[iv]);
     }
-
-    log("[Star] Subdividing triangles...");
 
     std::vector<unsigned int> indices = {
          0, 11,  5,
@@ -78,8 +71,6 @@ void Star::generateIcosphereMesh(unsigned int nDivisions) {
          9,  8,  1
 
     };
-
-    log("[Star] Caching midpoints...");
 
     auto makeKey = [](unsigned int a, unsigned int b) {
         const uint64_t minIndex = std::min(a, b);
@@ -124,13 +115,9 @@ void Star::generateIcosphereMesh(unsigned int nDivisions) {
         indices.swap(newIndices);
     }
 
-    log("[Star] Scaling vertices by radius...");
-
     for (unsigned int iv = 0; iv < vertices.size(); iv++) {
         vertices[iv] = Vector3Scale(vertices[iv], radius);
     }
-
-    log("[Star] Creating mesh...");
 
     Mesh mesh = { 0 };
     mesh.triangleCount = indices.size() / 3;
@@ -149,9 +136,5 @@ void Star::generateIcosphereMesh(unsigned int nDivisions) {
         mesh.normals[3*i + 2] = vertex.z / radius;
     }
 
-    log("[Star] Loading model from mesh...");
-
     setMesh(mesh);
-
-    log("[Star] Generated icosphere mesh with " + std::to_string(mesh.vertexCount) + " vertices and " + std::to_string(mesh.triangleCount) + " triangles.");
 }

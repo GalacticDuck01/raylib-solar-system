@@ -10,26 +10,24 @@ void Application::init(const char* title, int width, int height, unsigned int fl
     // Initialise window
     SetConfigFlags(flags);
     InitWindow(width, height, title);
+    SetTraceLogLevel(LOG_WARNING); // Only log warnings and errors from raylib
 
     // Raylib doesn't support maximisation on initialisation on desktop GLFW, so we have to do it manually here.
     if ((flags & FLAG_WINDOW_MAXIMIZED) != 0) {
         MaximizeWindow();
+        log("[Raylib] Maximized window");
     }
 
     SetExitKey(KEY_NULL);
     int targetFPS = GetMonitorRefreshRate(GetCurrentMonitor());
-    log("[Raylib] Setting target FPS to " + std::to_string(targetFPS));
+    log("[Raylib] Matching monitor refresh rate: " + std::to_string(targetFPS) + " FPS");
     SetTargetFPS(targetFPS);
 
     // Initialise audio
     InitAudioDevice();
 
     // Initialise camera
-    camera.position = (Vector3){ 0.0f, 10.0f, 10.0f };  // Camera position
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-    camera.fovy = 45.0f;                                // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
+    cameraSystem->initialise();
 
     // Initialise shader
     shader = LoadShader("shaders/phong_vertex.glsl", "shaders/phong_fragment.glsl");
@@ -38,7 +36,6 @@ void Application::init(const char* title, int width, int height, unsigned int fl
 }
 
 void Application::run() {
-    log("Entering main loop...");
     state = AppState::LOADING;
     // TODO: Load assets here, then switch to menu or running state
     state = AppState::RUNNING;
@@ -49,13 +46,14 @@ void Application::run() {
                 // TODO: Load assets
                 break;
             case AppState::MENU:
-                // TODO: Menu
+                menuUpdate();
                 break;
             case AppState::PAUSED:
                 // TODO: Paused
                 break;
             case AppState::RUNNING:
-                draw();
+                runUpdate();
+                render();
                 break;
             case AppState::GAME_OVER:
                 // TODO: Game over
@@ -74,25 +72,30 @@ void Application::setFPS(unsigned int fps) {
     SetTargetFPS(fps);
 }
 
-void Application::draw() {
+void Application::menuUpdate() {
+}
+
+void Application::runUpdate() {
+    cameraSystem->update();
+    cameraSystem->sendToShader(shader);
+}
+
+void Application::render() {
     BeginDrawing();
 
     ClearBackground(RAYWHITE);
 
     Vector3 lightPos = { -10.0f, 10.0f, 1.0f };
-
-    UpdateCamera(&camera, CAMERA_THIRD_PERSON);
-    SetShaderValue(shader, GetShaderLocation(shader, "cameraPosition"), &camera.position, SHADER_UNIFORM_VEC3);
     SetShaderValue(shader, GetShaderLocation(shader, "lightPosition"), &lightPos, SHADER_UNIFORM_VEC3);
 
     const char* text = "YARRR!";
     const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
     DrawText(text, 0, 0, 20, BLACK);
 
-     BeginMode3D(camera);
-        DrawGrid(10, 1.0f);
-        resourceManager->render(shader);
-     EndMode3D();
+    cameraSystem->beginMode3D();
+    DrawGrid(10, 1.0f);
+    entityManager->render(shader);
+    cameraSystem->endMode3D();
 
      DrawFPS(10, 10);
 

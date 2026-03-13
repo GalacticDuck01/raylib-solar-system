@@ -5,9 +5,9 @@
 #include <iostream>
 
 #include "raylib.h"
-#include "node_3d.hpp"
+#include "entity_3d.hpp"
 
-class Model3D : public Node3D {
+class Model3D : public Entity3D {
 public:
     Model3D() = default;
 
@@ -49,7 +49,7 @@ public:
     void setFlatShading(bool enabled) { flatShading = enabled; }
     bool getFlatShading() const { return flatShading; }
 
-    void draw(const Shader& shader) const {
+    void render(const Shader& shader) const {
         if (!loaded) return;
 
         // DrawModelWires(model, position, 1.0f, BLACK);

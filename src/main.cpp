@@ -11,13 +11,15 @@ int main() {
 
     Application app = Application();
     app.init("Window", SCREEN_WIDTH, SCREEN_HEIGHT, FLAG_WINDOW_MAXIMIZED | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
-    std::string windowState = IsWindowMaximized() ? "maximized" : "default";
-    log("App initialised with " + windowState + " window size.");
-    app.setFPS(60);
+    app.setFPS(600);
     
     Star star = Star({0, 0, 0}, 2, 4);
     star.setFlatShading(true);
-    app.resourceManager->loadNode("star", star);
+    Star planet = Star({5, 0, 0}, 1, 3);
+    planet.setTint(BLUE);
+    planet.setFlatShading(true);
+    app.entityManager->loadEntity("star", star);
+    app.entityManager->loadEntity("planet", planet);
 
     app.run();
 

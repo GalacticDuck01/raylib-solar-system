@@ -4,7 +4,6 @@
 ResourceManager* ResourceManager::instance = nullptr;
 
 ResourceManager::~ResourceManager() {
-    nodes.clear();
     for (const auto& pair : sounds) {
         UnloadSound(pair.second);
     }
@@ -13,15 +12,6 @@ ResourceManager::~ResourceManager() {
         UnloadTexture(pair.second);
     }
     textures.clear();
-}
-
-void ResourceManager::loadNode(const std::string& name, const Node3D& node) {
-    if (nodes.find(name) != nodes.end()) {
-        warning("[ResourceManager::loadNode] Unnecessary load. Node '" + name + "' already loaded.");
-        return;
-    }
-
-    nodes[name] = &node;
 }
 
 void ResourceManager::loadSound(std::string soundPath) {
@@ -43,10 +33,4 @@ void ResourceManager::loadTexture(std::string texturePath) {
 }
 
 void ResourceManager::tick() {
-}
-
-void ResourceManager::render(const Shader& shader) {
-    for (const auto& pair : nodes) {
-        pair.second->draw(shader);
-    }
 }

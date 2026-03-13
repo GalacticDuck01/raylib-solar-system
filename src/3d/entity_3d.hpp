@@ -2,14 +2,14 @@
 
 #include "raylib.h"
 
-class Node3D {
+class Entity3D {
 public:
-    Node3D() = default;
-    ~Node3D() = default;
+    Entity3D() = default;
+    ~Entity3D() = default;
 
     virtual void update() {};
 
-    virtual void draw(const Shader& shader) const {};
+    virtual void render(const Shader& shader) const {};
 
     void setPosition(Vector3 position) { this->position = position; };
     Vector3 getPosition() const { return this->position; };
